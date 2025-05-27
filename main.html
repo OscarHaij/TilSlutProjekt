@@ -10,11 +10,13 @@
       margin: 0;
       padding: 0;
     }
+
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #232526, #414345);
+      background: linear-gradient(to right, #232526, #414345); /* Mörk bakgrund */
       color: #fff;
     }
+
     header {
       background-color: #1f1f1f;
       padding: 1rem;
@@ -22,11 +24,12 @@
       font-size: 2rem;
       font-weight: bold;
       border-bottom: 2px solid #444;
-      position: fixed;
+      position: fixed; /* Gör att menyn stannar längst upp */
       top: 0;
       width: 100%;
-      z-index: 1000;
+      z-index: 1000; /* Lägger den överst */
     }
+
     .profile {
       position: absolute;
       top: 1rem;
@@ -36,23 +39,27 @@
       border-radius: 10px;
       font-size: 0.9rem;
     }
+
     main {
-      padding: 6rem 2rem 2rem 2rem;
+      padding: 6rem 2rem 2rem 2rem; /* Lägger till plats för headern */
       max-width: 800px;
       margin: 0 auto;
     }
+
     section {
       margin-bottom: 2rem;
       background: #2e2e2e;
       padding: 1.5rem;
       border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Ger lite skugga */
     }
+
     h2 {
       margin-bottom: 1rem;
       border-bottom: 1px solid #555;
       padding-bottom: 0.5rem;
     }
+
     input, select, button, textarea {
       display: block;
       width: 100%;
@@ -63,24 +70,30 @@
       border: none;
       font-size: 1rem;
     }
+
     button {
-      background-color: #5cb85c;
+      background-color: #5cb85c; /* Grön knapp */
       color: white;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s; /* Mjuk hover-effekt */
     }
+
     button:hover {
       background-color: #4cae4c;
     }
+
     #login-page, #main-page {
-      display: none;
+      display: none; /* Visa bara en sida åt gången */
     }
+
     .hidden {
-      display: none;
+      display: none; /* Används inte just nu men bra att ha */
     }
   </style>
 </head>
 <body>
+
+  <!-- Inloggningssidan -->
   <div id="login-page">
     <main>
       <section>
@@ -92,9 +105,10 @@
     </main>
   </div>
 
+  <!-- Huvudsidan -->
   <div id="main-page">
     <header>
-      <div class="profile" id="profile-display"></div>
+      <div class="profile" id="profile-display"></div> <!-- Visar vem som är inloggad -->
       Träningslogg
     </header>
     <main>
@@ -110,7 +124,7 @@
       <section>
         <h2>Visa träningspass</h2>
         <button onclick="visaPass()">Visa alla pass</button>
-        <div id="pass-lista"></div>
+        <div id="pass-lista"></div> <!-- Här läggs alla pass -->
       </section>
 
       <section>
@@ -118,12 +132,13 @@
         <input type="text" id="schema-namn" placeholder="Namn på schema">
         <textarea id="schema-beskrivning" placeholder="Beskrivning av schema"></textarea>
         <button onclick="läggTillSchema()">Lägg till schema</button>
-        <div id="schema-lista"></div>
+        <div id="schema-lista"></div> <!-- Här visas scheman -->
       </section>
     </main>
   </div>
 
   <script>
+    // Hämta gamla pass och scheman från localStorage om de finns
     let träningspass = JSON.parse(localStorage.getItem('traningspass')) || [];
     let träningsscheman = JSON.parse(localStorage.getItem('traningsscheman')) || [];
 
@@ -141,15 +156,19 @@
       const typ = document.getElementById("typ").value;
       const tid = document.getElementById("tid").value;
       const anteckning = document.getElementById("anteckning").value;
+
+      // Här kunde man lägga till en kontroll så att inget är tomt
+
       träningspass.push({ datum, typ, tid, anteckning });
       localStorage.setItem('traningspass', JSON.stringify(träningspass));
       alert("Träningspass sparat!");
-      visaPass();
+      visaPass(); // Visa direkt efter sparat
     }
 
     function visaPass() {
       const lista = document.getElementById("pass-lista");
-      lista.innerHTML = "";
+      lista.innerHTML = ""; // Rensa innan nya läggs till
+
       träningspass.forEach(p => {
         lista.innerHTML += `<p><strong>${p.datum}</strong>: ${p.typ} i ${p.tid} min - ${p.anteckning}</p>`;
       });
@@ -158,6 +177,9 @@
     function läggTillSchema() {
       const namn = document.getElementById("schema-namn").value;
       const beskrivning = document.getElementById("schema-beskrivning").value;
+
+      // Samma här – skulle kunna kolla att namn inte är tomt
+
       träningsscheman.push({ namn, beskrivning });
       localStorage.setItem('traningsscheman', JSON.stringify(träningsscheman));
       visaScheman();
@@ -165,22 +187,24 @@
 
     function visaScheman() {
       const lista = document.getElementById("schema-lista");
-      lista.innerHTML = "";
+      lista.innerHTML = ""; // Rensa listan
+
       träningsscheman.forEach((s, index) => {
         lista.innerHTML += `<p><strong>${s.namn}</strong>: ${s.beskrivning} <button onclick="taBortSchema(${index})">Ta bort</button></p>`;
       });
     }
 
     function taBortSchema(index) {
-      träningsscheman.splice(index, 1);
+      träningsscheman.splice(index, 1); // Tar bort rätt schema
       localStorage.setItem('traningsscheman', JSON.stringify(träningsscheman));
-      visaScheman();
+      visaScheman(); // Visa igen efter att ha tagit bort
     }
 
+    // När sidan laddas – visa inloggningssidan
     window.onload = () => {
       document.getElementById('login-page').style.display = 'block';
     };
   </script>
+
 </body>
 </html>
-
